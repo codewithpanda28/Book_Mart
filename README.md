@@ -65,8 +65,8 @@ Before cloning, please fork the repository and give it a star.
 
 ### 2. Clone the Repository
 ```sh
-git clone https://github.com/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/codewithpanda28/Book_Mart.git
+cd Book_Mart
 ```
 
 ### 3. Install Dependencies
