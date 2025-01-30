@@ -1,15 +1,15 @@
 'use client'
 import { Button } from '@/components/ui/button';
-import { BookOpen, Camera, CreditCard, Library, Search, ShoppingBag, Store, Tag, Truck, Wallet } from 'lucide-react';
+import { ArrowRight, BookOpen, Camera, ChevronLeft, ChevronRight, CreditCard, Library, Search, ShoppingBag, Store, Tag, Truck, Wallet } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import NewBooks from './components/NewBooks';
+import { Card, CardContent } from '@/components/ui/card';
 
-const page = () => {
+const Page = () => { // Changed 'page' to 'Page' to follow React component naming conventions
   const bannerImages = [
-    "/images/book1.jpg",
-    "/images/book2.jpg",
+      "/images/book2.jpg",
     "/images/book3.jpg",
   ];
 
@@ -101,7 +101,7 @@ const page = () => {
         {bannerImages.map((image, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${currentImage === index ? 'opacity-100' : 'opacity-0'
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${currentImage === index ? 'opacity-90' : 'opacity-0'
               }`}
           >
             <Image
@@ -134,7 +134,7 @@ const page = () => {
                     </div>
                     <Link href='/book-sell'>
                       <div className='text-left '>
-                        <div className='text-sm opacity-90'>Start Seeling</div>
+                        <div className='text-sm opacity-90'>Start Selling</div> {/* Fixed typo from 'Seeling' to 'Selling' */}
                         <div className='font-semibold'>Sell Old Books</div>
                       </div>
                     </Link>
@@ -202,8 +202,44 @@ const page = () => {
           ))}
         </div>
       </section>
+
+      {/* Blog Post */}
+      <section className='py-16 bg-[rgb(221,234,254)]'>
+        <div className='container mx-auto px-4'>
+          <h2 className='text-3xl font-bold mb-6 text-center'>Read From Our <span className='text-primary'>Blog</span></h2>
+
+    
+        <div className='grid md:grid-cols-3 gap-8'>
+          {blogPosts.map((post, index) => (
+            <Card key={index} className='h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg'>
+              <CardContent className='p-0 flex flex-col h-full'>
+                <div className='relative h-48 overflow-hidden'>
+                  <Image src={post.imageSrc} alt={post.title} layout='fill' className='transition-transform duration-300 hover:scale-105 object-cover ' />
+                  
+                </div>
+                <div className='p-6 flex flex-col flex-grow '>
+                  <h3 className='text-xl font-semibold mb-2 flex items-center gap-2 '>
+                    <div className='bg-primary/10 p-2 rounded-full '>
+                    {post.icon}
+                    </div>
+                    <span className='flex-grow'>{post.title}</span>
+                   
+                  </h3>
+                  <p className='text-gray-600 mb-4 flex-grow '>{post.description}</p>
+                  <Button variant={"link"} className='w-full'>Read More <ArrowRight/></Button>
+                  
+                </div>
+
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        </div>
+       
+
+      </section>
     </main>
   )
 }
 
-export default page
+export default Page; 
