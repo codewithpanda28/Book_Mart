@@ -14,6 +14,8 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { HiSearch } from 'react-icons/hi'
 import { useDispatch, useSelector } from 'react-redux'
+import AuthPage from './AuthPage'
+
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false)
@@ -268,6 +270,7 @@ const Header = () => {
         </Link>
 
       </div>
+      <AuthPage isLoginOpen={isLoginOpen} setLoginOpen={handleLoginClick} />
     </header>
   )
 }
