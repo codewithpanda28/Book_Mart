@@ -4,8 +4,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react'
+import { ArrowRight, CheckCircle, Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck, User } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -34,6 +35,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setLoginOpen }) => {
     const [showPassword, setShowPassword] = React.useState(false)
     const [forgotPasswordSuccess, setForgotPasswordSuccess] = React.useState(false)
     const [loginLoading, setLoginLoading] = React.useState(false)
+    const [forgotPasswordLoading, setForgotPasswordLoading] = React.useState(false)
     const [signupLoading, setSignupLoading] = React.useState(false)
     const [googleLoading, setGoogleLoading] = React.useState(false)
 
@@ -64,6 +66,7 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setLoginOpen }) => {
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.3 }}
                             >
+                                {/* login */}
                                 <TabsContent value='login' className='flex flex-col space-y-4'>
                                     <form className='flex flex-col space-y-4' onSubmit={handleLoginSubmit}>
                                         <div className='relative'>
@@ -111,6 +114,8 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setLoginOpen }) => {
                                         </div>
                                         {LoginError?.password && <p className='text-red-500 text-sm'>{LoginError.password.message}</p>}
 
+
+
                                         <Button type='submit' className='w-full'>{loginLoading ? (
                                             <>
                                                 <Loader2 className='animate-spin mr-2 h-4 w-4' />
@@ -132,23 +137,34 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setLoginOpen }) => {
                                     </div>
                                     <Button className='w-full flex items-center justify-center gap-2
                                         bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-4 mt-4'>
-                                        <Image
-                                            src='/icons/google.svg'
-                                            alt='google'
-                                            width={20}
-                                            height={20}
-                                        />
-                                        Login with Google
+                                        {googleLoading ? (
+                                            <>
+                                                <Loader2 className='animate-spin mr-2 h-4 w-4' />
+                                                Login to Google...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Image
+                                                    src='/icons/google.svg'
+                                                    alt='google'
+                                                    width={20}
+                                                    height={20}
+                                                />
+
+                                                Login with Google
+                                            </>
+                                        )}
                                     </Button>
+
                                 </TabsContent>
 
-
-                                <TabsContent value='signup'>
-                                    <form onSubmit={handleSignupSubmit} className='space-y-4'>
+                                {/* sign up */}
+                                <TabsContent value='signup' className='space-y-4'>
+                                    <form className='flex flex-col space-y-4' onSubmit={handleLoginSubmit}>
                                         <div className='relative'>
                                             <Input
                                                 placeholder='Name'
-                                                type='text'
+                                                type='name'
                                                 className='pl-10'
                                                 {...registerSignup('name', {
                                                     required: {
@@ -157,8 +173,10 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setLoginOpen }) => {
                                                     }
                                                 })}
                                             />
+                                            <User className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500' />
                                         </div>
-                                        {SignupError?.name && <p className='text-red-500 text-sm'>{SignupError.name.message}</p>}
+                                        {SignupError?.email && <p className='text-red-500 text-sm'>{SignupError.email.message}</p>}
+
                                         <div className='relative'>
                                             <Input
                                                 placeholder='Email'
@@ -171,8 +189,11 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setLoginOpen }) => {
                                                     }
                                                 })}
                                             />
+                                            <Mail className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500' />
                                         </div>
                                         {SignupError?.email && <p className='text-red-500 text-sm'>{SignupError.email.message}</p>}
+
+
                                         <div className='relative'>
                                             <Input
                                                 placeholder='Password'
@@ -185,59 +206,140 @@ const AuthPage: React.FC<LoginProps> = ({ isLoginOpen, setLoginOpen }) => {
                                                     }
                                                 })}
                                             />
+                                            <Lock className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500' />
+                                            {showPassword ? (
+                                                <EyeOff
+                                                    className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer'
+                                                    onClick={() => setShowPassword(false)}
+                                                    size={20}
+                                                />
+                                            ) : (
+                                                <Eye
+                                                    className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer'
+                                                    onClick={() => setShowPassword(true)}
+                                                    size={20}
+                                                />
+                                            )}
                                         </div>
                                         {SignupError?.password && <p className='text-red-500 text-sm'>{SignupError.password.message}</p>}
-                                        <div className='relative'>
-                                            <Input
-                                                placeholder='Confirm Password'
-                                                type={showPassword ? 'text' : 'password'}
-                                                className='pl-10'
-                                                {...registerSignup('confirmPassword', {
-                                                    required: {
-                                                        value: true,
-                                                        message: "Confirm Password is required"
-                                                    },
-                                                    validate: (value) =>
-                                                        value === registerSignup('password').value || "Passwords do not match"
-                                                })}
-                                            />
+
+                                        <div className='flex items-center '>
+                                            <input type="checkbox" {...registerSignup('agreeTerms', {
+                                                required: {
+                                                    value: true,
+                                                    message: "You must agree to the terms and conditions"
+                                                }
+                                            })} className='mr-2' />
+                                            <label className='text-sm'>I agree to the terms and conditions</label>
                                         </div>
-                                        {SignupError?.confirmPassword && <p className='text-red-500 text-sm'>{SignupError.confirmPassword.message}</p>}
-                                        <div className='flex justify-between items-center'>
-                                            <Checkbox
-                                                id='terms'
-                                                name='terms'
-                                                {...registerSignup('agreeTerms', {
+                                        {SignupError?.agreeTerms && <p className='text-red-500 text-sm'>{SignupError.agreeTerms.message}</p>}
+
+                                        <Button type='submit' className='w-full'>{signupLoading ? (
+                                            <>
+                                                <Loader2 className='animate-spin mr-2 h-4 w-4' />
+
+
+                                            </>
+                                        ) : (
+                                            <>
+                                                Sign Up
+                                            </>
+                                        )}</Button>
+
+                                    </form>
+                                </TabsContent>
+
+                                {/* forgot password */}
+                                <TabsContent value='forgot' className='space-y-4'>
+                                    {!forgotPasswordSuccess ? (
+                                        <form className='flex flex-col space-y-4' onSubmit={handleForgotPasswordSubmit}>
+                                            <div className='relative'>
+                                                <Input
+                                                    placeholder='Email'
+                                                    type='email'
+                                                    className='pl-10'
+                                                    {...registerForgotPassword('email', {
+                                                        required: {
+                                                            value: true,
+                                                            message: "Email is required"
+                                                        }
+                                                    })}
+                                                />
+                                                <Mail className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500' />
+                                            </div>
+                                            {forgotPasswordError?.email && <p className='text-red-500 text-sm'>{forgotPasswordError.email.message}</p>}
+
+
+
+
+                                            <div className='flex items-center '>
+                                                <input type="checkbox" {...registerForgotPassword('agreeTerms', {
                                                     required: {
                                                         value: true,
                                                         message: "You must agree to the terms and conditions"
                                                     }
-                                                })}
-                                            />
-                                            <label htmlFor='terms' className='text-sm text-muted-foreground cursor-pointer select-none'>
-                                                I agree to the terms and conditions
-                                            </label>
-                                        </div>
-                                        {SignupError?.agreeTerms && <p className='text-red-500 text-sm'>{SignupError.agreeTerms.message}</p>}
-                                        <Button type='submit' className='w-full flex items-center justify-center gap-2
-                                            bg-blue-500 text-white rounded-md py-2 px-4 mt-4'>
-                                            {signupLoading ? (
-                                                <Loader2 className='animate-spin mr-2 h-4 w-4' />
+                                                })} className='mr-2' />
+                                                <label className='text-sm'>I agree to the terms and conditions</label>
+                                            </div>
+                                            {forgotPasswordError?.agreeTerms && <p className='text-red-500 text-sm'>{forgotPasswordError.agreeTerms.message}</p>}
+
+                                            <Button type='submit' className='w-full'>{forgotPasswordLoading ? (
+                                                <>
+                                                    <Loader2 className='animate-spin mr-2 h-4 w-4' />
+
+
+                                                </>
                                             ) : (
-                                                "Signup"
-                                            )}
-                                        </Button>
-                                    </form>
+                                                <>
+                                                    Send Reset Link
+                                                </>
+                                            )}</Button>
+
+                                        </form>
+
+                                    ) : (
+                                        <motion.div
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            className='text-center space-y-4'
+                                        >
+                                            <CheckCircle className='w-16 h-16 text-green-500 mx-auto' />
+                                            <h3 className='text-xl font-semibold text-gray-700'>
+                                                Reset Link Sent
+                                            </h3>
+
+                                            <p className='text-gray-500'>
+                                                We've sent a password reset link to your email. Please check your inbox and follow the instructions to reset your password.
+                                            </p>
+
+                                            <Button onClick={() => setForgotPasswordSuccess(false)} className='w-full'>
+                                                Send Another Link To Email
+                                            </Button>
+
+                                        </motion.div>
+                                    )}
+
+
                                 </TabsContent>
 
-                                
 
-                                
 
-                                
+
+
                             </motion.div>
                         </AnimatePresence>
                     </Tabs>
+                    <p className='text-sm text-center mt-4 text-gray-600'>
+                        By Clicking "agree", you agree to our {" "}
+                        <Link href='/terms-and-conditions' className='text-blue-500'>
+                        Terms and Conditions
+                        </Link>{" "}
+                        and {""}
+                        <Link href='/privacy-policy'
+                        className='text-blue-500'>
+                            Privacy Policy
+                        </Link>
+                    </p>
                 </DialogHeader>
             </DialogContent>
         </Dialog>

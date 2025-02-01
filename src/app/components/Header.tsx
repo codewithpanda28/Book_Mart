@@ -28,7 +28,6 @@ const Header = () => {
 
   const handleLoginClick = () => {
     dispatch(toggleLoginDialog())
-    setIsDropdownOpen(false)
   }
 
   const handleProtectionNavigation = (href: string) => {
@@ -37,7 +36,6 @@ const Header = () => {
       setIsDropdownOpen(false)
     } else {
       dispatch(toggleLoginDialog())
-      setIsDropdownOpen(false)
     }
   }
 
@@ -71,13 +69,13 @@ const Header = () => {
       {
         icon: <Lock className='h-4 w-4' />,
         label: 'Login / Sign Up',
-        onclick: () => handleLoginClick()
+        onClick: handleLoginClick
       }
     ]),
     {
       icon: <User className='h-4 w-4' />,
       label: 'My Profile',
-      onclick: () => handleProtectionNavigation('/account/profile')
+      onClick: () => handleProtectionNavigation('/account/profile')
     },
     {
       label: 'My Orders',
